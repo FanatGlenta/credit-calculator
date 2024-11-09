@@ -1,0 +1,119 @@
+.img-container {
+  display: flex;
+}
+
+.popup-base {
+  gap: 10px;
+  padding: 16px;
+  border-radius: 15px;
+  width: 450px;
+  align-items: center;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 10000000;
+}
+.form-container-aplication-done {
+  display: flex;
+  background-color: rgba(15, 207, 76, 0.08), rgba(255, 255, 255, 1);
+  background-image: linear-gradient(
+      rgba(15, 207, 76, 0.08),
+      rgba(15, 207, 76, 0.08)
+    ),
+    linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 1));
+}
+
+.messageTitle {
+  color: #0fcf4c;
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.messageText {
+  display: flex;
+  flex-direction: column;
+}
+
+.messageDescription {
+  color: rgba(24, 37, 51, 0.6);
+  font-size: 16px;
+  font-weight: normal;
+}
+
+.form-container-application-error {
+  display: flex;
+  background-color: rgba(232, 32, 36, 0.08), rgba(255, 255, 255, 1);
+  background-image: linear-gradient(
+      rgba(232, 32, 36, 0.08),
+      rgba(232, 32, 36, 0.08)
+    ),
+    linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 1));
+}
+
+.messageTitleError {
+  color: rgba(232, 32, 36, 1);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.form-container-validation-error {
+  display: flex;
+  background-color: rgba(232, 32, 36, 0.08), rgba(255, 255, 255, 1);
+  background-image: linear-gradient(
+      rgba(232, 32, 36, 0.08),
+      rgba(232, 32, 36, 0.08)
+    ),
+    linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 1));
+}
+
+.form-container-info-application {
+  display: flex;
+  background-color: rgba(32, 87, 238, 0.08), rgba(255, 255, 255, 1);
+  background-image: linear-gradient(
+      rgba(32, 87, 238, 0.08),
+      rgba(32, 87, 238, 0.08)
+    ),
+    linear-gradient(rgba(255, 255, 255, 1), rgba(255, 255, 255, 1));
+}
+.messageTitleInfo {
+  color: rgba(32, 87, 238, 1);
+  font-size: 20px;
+  font-weight: 500;
+}
+
+.closePopup {
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.closePopupContainer {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 15px;
+  cursor: pointer;
+  background-color: transparent;
+}
+
+.closePopupContainer:hover {
+  .closePopup {
+    opacity: 1;
+  }
+}
+
+.closePopupContainer:active {
+  background-color: rgba(24, 37, 51, 0.08);
+}
+
+.hidden {
+  display: none;
+}

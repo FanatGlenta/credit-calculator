@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Кредитный калькулятор</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <!-- Контейнер для попапов -->
+    <div id="popupsContainer"></div>
+    <div class="container normal">
+      <div class="left-section">
+        <h1 id="formTitle">Кредитный<br />калькулятор</h1>
+        <div class="apply-button">
+          <button id="toggleButton" onclick="toggleForm()">
+            Оставить заявку
+          </button>
+        </div>
+      </div>
+
+      <!-- Форма кредитного калькулятора -->
+      <div class="form-container" id="calculatorForm">
+        <form id="credit-form">
+          <label for="loanAmount">Сумма кредита</label>
+          <input
+            type="range"
+            id="loanAmount"
+            min="10000"
+            max="1000000"
+            value="50000"
+            oninput="updateLoanAmount()"
+          />
+          <div class="range-value" id="loanAmountValue">50 000 ₽</div>
+
+          <label for="loanTerm">Срок кредита (в годах)</label>
+          <input
+            type="range"
+            id="loanTerm"
+            min="1"
+            max="30"
+            value="10"
+            oninput="updateLoanTerm()"
+          />
+          <div class="range-value" id="loanTermValue">10 лет</div>
+
+          <!-- Назначение кредита -->
+          <label for="loanPurpose">Назначение кредита</label>
+          <select
+            id="loanPurpose"
+            onchange="updateInterestRateOptions('credit'); toggleDownPayment('loanPurpose', 'downPaymentContainer')"
+          >
+            <option value="mortgage" selected>Ипотека</option>
+            <option value="auto">Авто-кредит</option>
+            <option value="consumer">Потребительский кредит</option>
+          </select>
+
+          <label for="interestRate">Процентная ставка</label>
+          <select id="interestRate">
+            <!-- Процентные ставки будут обновляться динамически -->
+          </select>
+
+          <!-- Поле для первоначального взноса, отображаемое по умолчанию -->
+          <div id="downPaymentContainer">
+            <label for="downPayment">Первоначальный взнос</label>
+            <input
+              type="number"
+              id="downPayment"
+              placeholder="Введите сумму"
+              min="0"
+            />
+          </div>
+
+          <button type="button" onclick="calculatePayment()">Рассчитать</button>
+        </form>
+      </div>
+
+      <!-- Форма заявки -->
+      <div class="form-container" id="applicationForm" style="display: none">
+        <div class="progress-bar-wrapper">
+          <div class="progress-bar-container">
+            <div class="progress-bar" id="progressBar"></div>
+          </div>
+          <span id="progressPercent">0%</span>
+        </div>
+
+        <form id="application-form">
+          <label for="applicantFullName">Полное имя</label>
+          <input
+            type="text"
+            id="applicantFullName"
+            placeholder="Евгений Иванов"
+            required
+          />
+
+          <label for="applicantPhone">Номер телефона</label>
+          <input
+            type="tel"
+            id="applicantPhone"
+            placeholder="8 (__) ___-__-__"
+            required
+          />
+
+          <label for="applicantEmail">Электронная почта</label>
+          <input
+            type="email"
+            id="applicantEmail"
+            placeholder="example@mail.com"
+            required
+          />
+
+          <label for="applicantAddress">Адрес проживания</label>
+          <input
+            type="text"
+            id="applicantAddress"
+            placeholder="г. Москва, ул. Примерная, д. 1"
+            required
+          />
+
+          <label for="applicantBirthDate">Дата рождения</label>
+          <input type="date" id="applicantBirthDate" required />
+
+          <label for="maritalStatus">Семейное положение</label>
+          <select id="maritalStatus" required>
+            <option value="single">Холост/Не замужем</option>
+            <option value="married">Женат/Замужем</option>
+            <option value="divorced">Разведен/Разведена</option>
+            <option value="widowed">Вдова/Вдовец</option>
+          </select>
+
+          <label for="salary">Ежемесячный доход</label>
+          <input type="number" id="salary" placeholder="50000" required />
+
+          <label for="employmentType">Тип занятости</label>
+          <select id="employmentType" required>
+            <option value="permanent">Постоянная</option>
+            <option value="contract">Контрактная</option>
+            <option value="self-employed">Самозанятый</option>
+            <option value="unemployed">Безработный</option>
+          </select>
+
+          <label for="appLoanPurpose">Назначение кредита</label>
+          <select
+            id="appLoanPurpose"
+            onchange="updateInterestRateOptions('application'); toggleDownPayment('appLoanPurpose', 'applicationDownPaymentContainer')"
+          >
+            <option value="mortgage">Ипотека</option>
+            <option value="auto">Авто-кредит</option>
+            <option value="consumer">Потребительский кредит</option>
+          </select>
+
+          <!-- Поле для первоначального взноса, скрытое по умолчанию -->
+          <div id="applicationDownPaymentContainer">
+            <label for="applicationDownPayment">Первоначальный взнос</label>
+            <input
+              type="number"
+              id="applicationDownPayment"
+              placeholder="Введите сумму"
+              min="0"
+            />
+          </div>
+
+          <!-- Ползунок для выбора суммы кредита -->
+          <label for="appLoanAmount">Сумма кредита</label>
+          <input
+            type="range"
+            id="appLoanAmount"
+            min="10000"
+            max="1000000"
+            value="50000"
+            oninput="updateApplicationLoanAmount()"
+          />
+          <div class="range-value" id="appLoanAmountValue">50 000 ₽</div>
+
+          <!-- Ползунок для выбора срока кредита -->
+          <label for="appLoanTerm">Срок кредита (в годах)</label>
+          <input
+            type="range"
+            id="appLoanTerm"
+            min="1"
+            max="30"
+            value="10"
+            oninput="updateApplicationLoanTerm()"
+          />
+          <div class="range-value" id="appLoanTermValue">10 лет</div>
+
+          <label for="appInterestRate">Процентная ставка</label>
+          <select id="appInterestRate">
+            <!-- Процентные ставки будут обновляться динамически -->
+          </select>
+
+          <button type="button" onclick="submitApplication()">Отправить</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Блок с ежемесячным платежом для калькулятора -->
+    <div class="result">
+      <h3>Ежемесячный платеж:</h3>
+      <p id="monthlyPayment">0 ₽</p>
+      <div class="apply-button">
+        <a href="payment-chart.html" onclick="calculateChartData()">
+          <button>Посмотреть график платежей</button>
+        </a>
+      </div>
+    </div>
+
+    <!-- чатбот -->
+    <div class="chatbot" id="chatbot">
+      <div class="chatbot-header">
+        <div class="chatbot-title">
+          <img src="./assets/Cat-User.svg" />
+          <h3>Чат-ассистент</h3>
+        </div>
+
+        <button onclick="toggleChatbot()" class="close-chatbot">
+          <img src="./assets/closePopup.svg" />
+        </button>
+      </div>
+      <div class="chatbot-messages" id="chatbotMessages"></div>
+      <div class="chatbot-input">
+        <input
+          type="text"
+          id="chatInput"
+          placeholder="Задайте вопрос..."
+          onkeydown="if(event.key === 'Enter') sendMessage()"
+        />
+        <button onclick="sendMessage()" class="send-button">Отправить</button>
+      </div>
+    </div>
+
+    <!-- Кнопка для открытия чата -->
+    <button class="open-chatbot" onclick="toggleChatbot()">
+      <img src="./assets/mobile.svg" />
+    </button>
+
+    <!-- footer -->
+    <!-- <footer class="site-footer">
+      <div>Все права защищены © 2024 Кредиты Онлайн</div>
+    </footer> -->
+
+    <script src="script.js"></script>
+    <script src="chat.js"></script>
+    <script src="popup-script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Popups</title>
+    <link rel="stylesheet" href="popup.css" />
+  </head>
+  <body>
+    <!-- Попап для успешной отправки заявки -->
+    <div
+      class="form-container-aplication-done hidden popup popup-base"
+      id="FormDoneSuccess"
+    >
+      <div class="img-container"><img src="./assets/Успешно.svg" /></div>
+      <div class="message">
+        <div class="messageText">
+          <span class="messageTitle">Успешно!</span>
+          <span class="messageDescription" id="FormDoneSuccessMessage"></span>
+        </div>
+        <div class="closePopupContainer">
+          <img
+            onclick="closePopups()"
+            src="./assets/closePopup.svg"
+            class="closePopup"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Попап для ошибки при отправке заявки -->
+    <div
+      class="form-container-application-error hidden popup popup-base"
+      id="FormDoneError"
+    >
+      <div class="img-container">
+        <img src="./assets/Ошибка.svg" />
+      </div>
+      <div class="message">
+        <div class="messageText">
+          <span class="messageTitleError">Ошибка!</span>
+          <span class="messageDescription" id="FormDoneErrorMessage"></span>
+        </div>
+        <div class="closePopupContainer">
+          <img
+            onclick="closePopups()"
+            src="./assets/closePopup.svg"
+            class="closePopup"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Попап для отображения ошибок валидации -->
+    <div
+      class="form-container-validation-error hidden popup popup-base"
+      id="validationErrorPopup"
+    >
+      <div class="img-container">
+        <img src="./assets/Ошибка.svg" />
+      </div>
+      <div class="message">
+        <div class="messageText">
+          <span class="messageTitleError">Ошибка!</span>
+          <span class="messageDescription" id="validationErrorMessage"></span>
+        </div>
+        <div class="closePopupContainer">
+          <img
+            onclick="closePopups()"
+            src="./assets/closePopup.svg"
+            class="closePopup"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- Попап для отображения ошибок валидации -->
+    <div
+      class="form-container-info-application hidden popup popup-base"
+      id="InfoApplicationPopup"
+    >
+      <div class="img-container">
+        <img src="./assets/information.svg" />
+      </div>
+      <div class="message">
+        <div class="messageText">
+          <span class="messageTitleInfo">Информация по заявке!</span>
+          <span class="messageDescription" id="InfoApplicationMessage"></span>
+        </div>
+        <div class="closePopupContainer">
+          <img
+            onclick="closePopups()"
+            src="./assets/closePopup.svg"
+            class="closePopup"
+          />
+        </div>
+      </div>
+    </div>
+
+    <script src="popup-script.js"></script>
+  </body>
+</html>

@@ -1,0 +1,578 @@
+@font-face {
+  font-family: "GolosText";
+  src: url(./assets/fonts/GolosText-VariableFont_wght.ttf) format("truetype");
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: "GolosText", sans-serif;
+  background: linear-gradient(135deg, #f1f1f1, #c3c3e5, #debac3);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 40px;
+  background-repeat: no-repeat;
+  gap: 20px;
+}
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  position: fixed;
+  top: 0px;
+  background-color: #f4e7ff;
+  padding-left: 60px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-right: 60px;
+}
+
+.auth-buttons {
+  display: flex;
+  gap: 20px;
+}
+
+.logo {
+  font-size: 25px;
+  text-decoration: none;
+  color: #af82f7;
+}
+a {
+  all: unset;
+  cursor: pointer;
+}
+
+.form-container::-webkit-scrollbar {
+  width: 7px; /* ширина scrollbar */
+}
+.form-container::-webkit-scrollbar-track {
+  background: #f4e7ff; /* цвет дорожки */
+  border-radius: 20px;
+}
+.form-container::-webkit-scrollbar-thumb {
+  background-color: #af82f7; /* цвет плашки */
+  border-radius: 20px; /* закругления плашки */
+}
+
+.container {
+  display: flex;
+  width: 800px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 25px;
+  box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition: transform 0.5s ease-in-out; /* Плавная смена направления */
+  position: relative;
+}
+
+/* Скрытые блоки, которые смещаются при анимации */
+.container.hidden {
+  transform: translateX(-50%);
+  opacity: 0;
+}
+
+/* Анимация при смене порядка блоков */
+.container.reversed .left-section {
+  transform: translateX(100%); /* Сместить левый блок вправо */
+}
+
+.container.reversed .form-container {
+  transform: translateX(-100%); /* Сместить правый блок влево */
+}
+
+.left-section,
+.form-container {
+  width: 50%;
+  transition: transform 0.5s ease-in-out, opacity 0.5s ease-in-out; /* Добавляем анимацию для каждого блока */
+}
+
+.left-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  text-align: center;
+}
+
+.left-section h1 {
+  font-size: 36px;
+  font-weight: bold;
+  color: #000;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.apply-button {
+  margin-top: 20px;
+}
+
+.apply-button button {
+  background-color: #f4e7ff;
+  color: #af82f7;
+  border: 3px solid #af82f7;
+  font-size: 20px;
+  padding: 10px 30px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+}
+
+.Vcontainer {
+  width: 150px;
+  height: 150px;
+  border-radius: 24px;
+
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+  background: rgba(255, 255, 255, 0.15), rgb(1, 150, 65);
+}
+
+.apply-button button:hover {
+  background-color: #ebdfff;
+}
+
+.apply-button button:active {
+  background-color: #af82f7;
+  color: #fff;
+  transform: scale(0.98);
+}
+
+/* Изначальная стрелка справа */
+.apply-button button::after {
+  content: "→";
+  font-size: 24px;
+  margin-left: 10px;
+  transition: transform 0.3s;
+}
+
+/* Стрелка слева, когда заявка открыта */
+.apply-button button.left-arrow::before {
+  content: "←";
+  font-size: 24px;
+  margin-right: 10px;
+}
+
+/* Скрытие стрелки справа, когда активна стрелка слева */
+.apply-button button.left-arrow::after {
+  display: none;
+}
+
+.form-container {
+  background-color: #ffffff;
+  padding: 3vh;
+  border-radius: 15px;
+}
+
+label {
+  font-size: 14px;
+  display: block;
+  margin-bottom: 8px;
+}
+
+input,
+select {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  transition: border-color 0.3s, background-color 0.3s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+/* Стили для состояний hover, focus, и active для полей ввода */
+input:hover,
+select:hover {
+  border-color: #af82f7;
+  background-color: #f4e7ff;
+}
+
+input:focus,
+select:focus {
+  border-color: #af82f7;
+  background-color: #f4e7ff;
+  outline: none;
+}
+
+input:active,
+select:active {
+  border-color: #af82f7;
+  background-color: #e0d4ff;
+  outline: none;
+}
+
+input[type="range"] {
+  width: 100%;
+  -webkit-appearance: none;
+  appearance: none;
+  height: 10px;
+  background: #f4e7ff;
+  border-radius: 5px;
+  outline: none;
+  transition: background-color 0.3s;
+  padding: 0px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  background: #af82f7;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s, transform 0.2s;
+  /* background-image: url("./assets/tumb.svg"); */
+  background-size: cover;
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  background-color: #9765e0;
+}
+
+input[type="range"]::-webkit-slider-thumb:active {
+  background-color: #9765e0;
+  transform: scale(1.1);
+}
+
+.range-value {
+  font-size: 14px;
+  margin-top: -15px;
+  margin-bottom: 20px;
+  text-align: right;
+  color: #667;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  background-color: #af82f7;
+  color: #fff;
+  font-size: 16px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: #9765e0;
+}
+
+.result {
+  padding: 20px;
+  width: 800px;
+  background-color: #ffffff;
+  border-radius: 15px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: opacity 0.5s ease-in-out;
+}
+
+.result.hidden {
+  display: none;
+  pointer-events: none;
+}
+
+.result h3 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.result p {
+  font-size: 32px;
+  font-weight: bold;
+  color: #af82f7;
+}
+/* Плавное появление и исчезновение формы */
+.form-container {
+  transition: opacity 0.5s ease;
+  opacity: 1;
+}
+
+.form-container.hidden {
+  opacity: 0;
+  display: none;
+}
+
+/* Для переключения местами */
+.container.reversed .left-section {
+  transform: translateX(100%); /* Левый блок смещается вправо */
+}
+
+.container.reversed .form-container {
+  transform: translateX(-100%); /* Правый блок смещается влево */
+}
+
+/* Оба блока должны быть настроены для анимации */
+.left-section,
+.form-container {
+  width: 50%;
+  transition: transform 0.5s ease-in-out;
+}
+
+/* Анимация при перемещении формы заявки */
+.container.reversed .form-container#calculatorForm {
+  transform: translateX(100%);
+}
+
+.container.reversed .form-container#applicationForm {
+  transform: translateX(-100%);
+}
+
+.error-class {
+  border: 2px solid red;
+}
+
+.currency-rates {
+  background-color: #ffffff;
+  padding: 20px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s, background-color 0.3s;
+  display: flex;
+  flex-direction: column;
+}
+
+.rates {
+  display: flex;
+  gap: 40px;
+}
+
+.currency-rates h2 {
+  font-size: 24px;
+  color: #af82f7;
+  margin-bottom: 15px;
+  font-weight: bold;
+}
+
+.currency-rates p {
+  font-size: 20px;
+  margin: 8px 0;
+  color: #333;
+}
+
+.currency-rates span {
+  font-weight: bold;
+  color: #af82f7;
+}
+
+.currency-ticker {
+  width: 100%;
+  overflow: hidden;
+  background: linear-gradient(135deg, #f4e7ff, #c3c3e5);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.ticker {
+  display: flex;
+  animation: ticker 30s linear infinite;
+  align-items: center;
+  gap: 30px;
+}
+
+.ticker p {
+  font-size: 14px;
+  color: #af82f7;
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+@keyframes ticker {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+/* Контейнер для прогресс-бара и процента */
+.progress-bar-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+/* Контейнер для прогресс-бара */
+.progress-bar-container {
+  flex: 1;
+  background-color: #f3f3f3;
+  height: 10px;
+  border-radius: 5px;
+  overflow: hidden;
+  margin-right: 10px;
+}
+
+/* Прогресс-бар */
+.progress-bar {
+  width: 0%;
+  height: 100%;
+  background-color: #af82f7;
+  transition: width 0.4s ease;
+}
+
+/* Стиль для процента заполнения */
+#progressPercent {
+  font-size: 14px;
+  color: #333;
+}
+
+.site-footer {
+  position: absolute;
+  bottom: 0;
+  font-size: 18px;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Основной стиль для чат-бота */
+.chatbot {
+  display: none;
+  position: fixed;
+  bottom: 40px;
+  right: 20px;
+  width: 20vw;
+  background: #f1f1f1;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  font-family: Arial, sans-serif;
+}
+
+.chatbot-header {
+  background-color: #af82f7;
+  color: white;
+  padding: 10px;
+  border-top-left-radius: 10px;
+  border-top-right-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chatbot-messages {
+  padding: 10px;
+  height: 300px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chatbot-input {
+  display: flex;
+  padding: 10px;
+  border-top: 1px solid #ddd;
+}
+
+.chatbot-input input {
+  width: 100%;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.chatbot-input button {
+  background-color: #af82f7;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  margin-left: 5px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.chatbot-input button:hover {
+  opacity: 0.8;
+}
+
+.open-chatbot {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 10px 10px;
+  background-color: white;
+  color: white;
+  border: none;
+  border-radius: 100%;
+  cursor: pointer;
+  width: 70px;
+  height: 70px;
+}
+
+.close-chatbot {
+  width: 40px;
+  height: 40px;
+  border-radius: 15px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.user {
+  max-width: 50%;
+  border-radius: 15px;
+  padding-bottom: 25px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 25px;
+  background-color: #af82f7;
+  color: white;
+  position: relative;
+}
+
+.bot {
+  max-width: 70%;
+  border-radius: 15px;
+  padding-bottom: 25px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 25px;
+  background-color: #af82f7;
+  color: white;
+  position: relative;
+  left: 5.5vw;
+}
+
+.message-time {
+  position: absolute;
+  bottom: 5px;
+  right: 15px;
+  color: white;
+  opacity: 0.5;
+}
+
+.chatbot-title {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.chatbot::-webkit-scrollbar {
+  width: 7px; /* ширина scrollbar */
+}
+.chatbot::-webkit-scrollbar-track {
+  background: #f4e7ff; /* цвет дорожки */
+  border-radius: 20px;
+}
+.chatbot::-webkit-scrollbar-thumb {
+  background-color: #af82f7; /* цвет плашки */
+  border-radius: 20px; /* закругления плашки */
+}

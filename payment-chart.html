@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>График платежей</title>
+    <!-- Подключаем файл стилей для графика -->
+    <link rel="stylesheet" href="chart-style.css" />
+  </head>
+  <body>
+    <div class="container">
+      <h1>График платежей по кредиту</h1>
+      <!-- График платежей -->
+      <canvas id="paymentChart"></canvas>
+      <!-- Кнопка для возврата на страницу калькулятора -->
+      <button class="apply-button">
+        <a href="index.html" class="apply-button-link">Назад к калькулятору</a>
+      </button>
+    </div>
+
+    <!-- Подключаем Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Подключаем файл с логикой для графика -->
+    <script src="chart.js"></script>
+  </body>
+</html>
+
+<!-- Всплывающая подсказка "Пошел нахуй, в этом браузере лагают анимации" -->
+<!-- <script>
+      // Определяем браузер Safari
+      var isSafari = /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+
+      if (isSafari) {
+        // Очищаем все содержимое body
+        document.body.innerHTML = "";
+
+        // Создаем элемент заглушки
+        var safariWarning = document.createElement("div");
+        safariWarning.style.position = "fixed";
+        safariWarning.style.top = "0";
+        safariWarning.style.left = "0";
+        safariWarning.style.width = "100%";
+        safariWarning.style.height = "100vh"; // Полная высота экрана
+        safariWarning.style.display = "flex";
+        safariWarning.style.justifyContent = "center";
+        safariWarning.style.alignItems = "center";
+        safariWarning.style.backgroundColor = "black";
+        safariWarning.style.color = "white";
+        safariWarning.style.fontSize = "24px";
+        safariWarning.style.textAlign = "center";
+        safariWarning.textContent =
+          "Пошел нахуй, в этом браузере лагают анимации";
+
+        // Добавляем заглушку в тело документа
+        document.body.appendChild(safariWarning);
+      }
+    </script> -->
