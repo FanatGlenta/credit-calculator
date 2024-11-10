@@ -79,7 +79,7 @@ const approveLoan = (applicationData, callback) => {
 
 // Функция для рассылки уведомлений конкретному пользователю
 const notifyTelegramUser = (applicationData) => {
-  const userId = 1282715013; // ID единственного пользователя, которому отправляется сообщение
+  const userId = process.env.TG_ID; // ID единственного пользователя, которому отправляется сообщение
   const downPayment = applicationData.downPayment
     ? `${applicationData.downPayment} ₽`
     : "Кредит не ипотечный";

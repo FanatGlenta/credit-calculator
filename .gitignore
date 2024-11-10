@@ -5,3 +5,5 @@ env/
 # MacOS file
 .DS_Store
 
+
+.idea/
