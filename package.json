@@ -8,6 +8,7 @@
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
     "fs": "^0.0.1-security",
+    "gigachat-node": "^2.1.4",
     "node": "^20.18.0",
     "node-html-to-image": "^5.0.0",
     "node-telegram-bot-api": "^0.66.0",
@@ -15,5 +16,13 @@
     "pdfkit": "^0.15.0",
     "pg": "^8.13.0",
     "xlsx": "^0.18.5"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
   }
 }

@@ -1,3 +1,4 @@
+// app.js
 require("dotenv").config();
 const express = require("express");
 const bodyParser = require("body-parser");
@@ -18,7 +19,6 @@ const TELEGRAM_TOKEN = process.env.TELEGRAM_TOKEN;
 const pool = new Pool(dbConfig);
 const bot = new TelegramBot(TELEGRAM_TOKEN, { polling: false });
 const app = express();
-const PORT = 3000;
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -39,7 +39,7 @@ const calculateAge = (birthDate) => {
 };
 
 // Логика одобрения кредита
-const approveLoan = (applicationData, callback) => {
+const approveLoan = (applicationData, callback, skipTimeout = false) => {
   const MIN_SALARY_FOR_APPROVAL = 30000;
   const MAX_LOAN_AMOUNT_TO_SALARY_RATIO = 5;
   const RESTRICTED_EMPLOYMENT_TYPES = ["unemployed"];
@@ -49,7 +49,7 @@ const approveLoan = (applicationData, callback) => {
     applicationData;
   const age = calculateAge(birthDate);
 
-  setTimeout(() => {
+  const processApplication = () => {
     let applicationStatus = "Отклонена";
     let rejectionReason = "";
 
@@ -74,7 +74,13 @@ const approveLoan = (applicationData, callback) => {
     }
 
     callback(applicationStatus, rejectionReason);
-  }, 5000);
+  };
+
+  if (skipTimeout) {
+    processApplication(); // Без задержки для тестов
+  } else {
+    setTimeout(processApplication, 5000); // С задержкой в продакшн-коде
+  }
 };
 
 // Функция для рассылки уведомлений конкретному пользователю
@@ -153,15 +159,55 @@ const saveToDatabase = async (data) => {
   }
 };
 
+// Функция для расчета ежемесячного платежа
+function calculateMonthlyPayment(loanAmount, loanTerm, interestRate) {
+  const monthlyInterestRate = parseFloat(interestRate) / 100 / 12;
+  const numberOfPayments = parseFloat(loanTerm) * 12;
+
+  if (monthlyInterestRate === 0) {
+    return loanAmount / numberOfPayments;
+  }
+
+  return (
+    (loanAmount * monthlyInterestRate) /
+      (1 - Math.pow(1 + monthlyInterestRate, -numberOfPayments)) +
+    1
+  );
+}
+
+module.exports = { calculateMonthlyPayment };
+
+// Маршрут для расчета ежемесячного платежа
+app.post("/calculatePayment", (req, res) => {
+  const { loanAmount, loanTerm, interestRate } = req.body;
+
+  // Проверка входных данных
+  if (!loanAmount || !loanTerm || !interestRate) {
+    return res.status(400).json({
+      error: "Необходимо указать сумму кредита, срок и процентную ставку.",
+    });
+  }
+
+  // Вызов функции расчета
+  const monthlyPayment = calculateMonthlyPayment(
+    parseFloat(loanAmount),
+    parseFloat(loanTerm),
+    parseFloat(interestRate)
+  );
+
+  res.json({ monthlyPayment });
+});
+
 // Обработчик POST-запроса с проверкой времени последней отправки
 app.post("/submitApplication", (req, res) => {
   const applicationData = req.body;
   const userIdentifier = applicationData.phone; // или applicationData.email
+  const submissionDelay = process.env.SUBMISSION_DELAY || 30000; // 30 секунд или значение из .env
 
   const lastSubmission = lastSubmissionTime.get(userIdentifier);
   const currentTime = new Date().getTime();
 
-  if (lastSubmission && currentTime - lastSubmission < 30000) {
+  if (lastSubmission && currentTime - lastSubmission < submissionDelay) {
     return res.status(429).json({
       status: "error",
       message: "Пожалуйста, подождите минуту перед отправкой новой заявки.",
@@ -197,7 +243,12 @@ app.post("/submitApplication", (req, res) => {
   });
 });
 
-// Запуск сервера
-app.listen(PORT, () => {
-  console.log(`Сервер запущен на порту ${PORT}`);
-});
+module.exports = app; // Экспорт самого приложения
+
+module.exports = {
+  app, // Экспорт приложения
+  calculateAge, // Экспорт функции расчета возраста
+  approveLoan, // Экспорт логики одобрения кредита
+  calculateMonthlyPayment, // Экспорт функции расчета ежемесячного платежа
+  saveToDatabase, // Экспорт функции для сохранения в базу данных
+};

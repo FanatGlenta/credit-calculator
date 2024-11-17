@@ -4,6 +4,23 @@ function updateLoanAmount() {
   document.getElementById("loanAmountValue").innerText = `${loanAmount} ₽`;
 }
 
+// // Обновляем текстовое поле при изменении ползунка
+// function updateLoanAmount() {
+//   const loanAmount = document.getElementById("loanAmount").value;
+//   document.getElementById("loanAmountInput").value = loanAmount;
+// }
+
+// // Обновляем ползунок при изменении текстового поля
+// function updateLoanAmountFromInput() {
+//   const loanAmountInput = document.getElementById("loanAmountInput").value;
+//   document.getElementById("loanAmount").value = loanAmountInput;
+// }
+
+// function updateLoanTerm() {
+//   const loanTerm = document.getElementById("loanTerm").value;
+//   document.getElementById("loanTermValue").textContent = loanTerm + " лет";
+// }
+
 // Отображение блока с полем первоначального взноса
 function toggleDownPayment(elementId, containerId) {
   const loanPurpose = document.getElementById(elementId).value;
@@ -20,8 +37,9 @@ function toggleDownPayment(elementId, containerId) {
 function calculatePayment() {
   const loanAmount = parseFloat(document.getElementById("loanAmount").value);
   const loanTerm = parseFloat(document.getElementById("loanTerm").value);
-  const interestRate =
-    parseFloat(document.getElementById("interestRate").value) / 100 / 12;
+  const interestRate = parseFloat(
+    document.getElementById("interestRate").value
+  );
   const downPaymentInput = document.getElementById("downPayment"); // Ссылка на поле первоначального взноса
   const downPayment =
     parseFloat(document.getElementById("downPayment").value) || 0; // Первоначальный взнос
@@ -39,27 +57,34 @@ function calculatePayment() {
   const adjustedLoanAmount =
     loanPurpose === "mortgage" ? loanAmount - downPayment : loanAmount;
 
-  const numberOfPayments = loanTerm * 12;
+  // Подготовка данных для отправки на сервер
+  const calculationData = {
+    loanAmount: adjustedLoanAmount,
+    loanTerm: loanTerm,
+    interestRate: interestRate,
+  };
 
-  // Формула для расчета ежемесячного платежа
-  const monthlyPayment =
-    (adjustedLoanAmount * interestRate) /
-    (1 - Math.pow(1 + interestRate, -numberOfPayments));
+  // Отправка запроса на сервер для расчета ежемесячного платежа
+  fetch("http://localhost:3000/calculatePayment", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(calculationData),
+  })
+    .then((response) => response.json())
+    .then((data) => {
+      const monthlyPayment = data.monthlyPayment;
 
-  // Сохраним данные для дальнейшего использования в localStorage
-  localStorage.setItem("loanAmount", loanAmount);
-  localStorage.setItem("loanTerm", loanTerm);
-  localStorage.setItem(
-    "interestRate",
-    document.getElementById("interestRate").value
-  );
-  localStorage.setItem("downPayment", downPayment); // Сохраним первоначальный взнос
-  localStorage.setItem("monthlyPayment", monthlyPayment);
-
-  // Обновим отображение результата
-  document.getElementById(
-    "monthlyPayment"
-  ).innerText = `${monthlyPayment.toFixed(2)} ₽`;
+      // Обновляем отображение результата
+      document.getElementById(
+        "monthlyPayment"
+      ).innerText = `${monthlyPayment.toFixed(2)} ₽`;
+    })
+    .catch((error) => {
+      showErrorPopup("Ошибка при расчете ежемесячного платежа.");
+      console.error("Error calculating monthly payment:", error);
+    });
 }
 
 // Функция для переключения между формой калькулятора и формой заявки с анимацией
@@ -425,6 +450,7 @@ function loadPopups() {
 }
 
 // Общая функция для инициализации всех компонентов при загрузке страницы
+// Общая функция для инициализации всех компонентов при загрузке страницы
 function initializePage() {
   // Загрузка попапов
   loadPopups();
@@ -433,7 +459,7 @@ function initializePage() {
   updateInterestRateOptions("credit");
   updateInterestRateOptions("application");
 
-  // Инициализация прогресс-бара
+  // Обновление прогресс-бара сразу после загрузки страницы
   updateProgressBar();
 
   // Добавление событий на ввод в полях формы заявки для обновления прогресс-бара
@@ -442,31 +468,12 @@ function initializePage() {
     .forEach((element) => {
       element.addEventListener("input", updateProgressBar);
     });
+
+  // Добавление события для кнопки расчета платежа
+  document
+    .getElementById("calculateButton")
+    .addEventListener("click", calculatePayment);
 }
+
 // Установка общей функции инициализации для события загрузки страницы
 window.onload = initializePage;
-
-// Функция для показа или скрытия поля первоначального взноса
-// function toggleDownPayment() {
-//   const loanPurpose = document.getElementById("loanPurpose").value;
-//   const downPaymentContainer = document.getElementById("downPaymentContainer");
-
-//   if (loanPurpose === "mortgage") {
-//     downPaymentContainer.style.display = "block"; // Показываем поле
-//   } else {
-//     downPaymentContainer.style.display = "none"; // Скрываем поле
-//   }
-// }
-
-// function toggleApplicationDownPayment() {
-//   const loanPurpose = document.getElementById("appLoanPurpose").value;
-//   const downPaymentContainer = document.getElementById(
-//     "applicationDownPaymentContainer"
-//   );
-
-//   if (loanPurpose === "mortgage") {
-//     downPaymentContainer.style.display = "block"; // Показываем поле
-//   } else {
-//     downPaymentContainer.style.display = "none"; // Скрываем поле
-//   }
-// }
