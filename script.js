@@ -4,22 +4,22 @@ function updateLoanAmount() {
   document.getElementById("loanAmountValue").innerText = `${loanAmount} ₽`;
 }
 
-// // Обновляем текстовое поле при изменении ползунка
-// function updateLoanAmount() {
-//   const loanAmount = document.getElementById("loanAmount").value;
-//   document.getElementById("loanAmountInput").value = loanAmount;
-// }
+// Обновляем текстовое поле при изменении ползунка
+function updateLoanAmount() {
+  const loanAmount = document.getElementById("loanAmount").value;
+  document.getElementById("loanAmountInput").value = loanAmount;
+}
 
-// // Обновляем ползунок при изменении текстового поля
-// function updateLoanAmountFromInput() {
-//   const loanAmountInput = document.getElementById("loanAmountInput").value;
-//   document.getElementById("loanAmount").value = loanAmountInput;
-// }
+// Обновляем ползунок при изменении текстового поля
+function updateLoanAmountFromInput() {
+  const loanAmountInput = document.getElementById("loanAmountInput").value;
+  document.getElementById("loanAmount").value = loanAmountInput;
+}
 
-// function updateLoanTerm() {
-//   const loanTerm = document.getElementById("loanTerm").value;
-//   document.getElementById("loanTermValue").textContent = loanTerm + " лет";
-// }
+function updateLoanTerm() {
+  const loanTerm = document.getElementById("loanTerm").value;
+  document.getElementById("loanTermValue").textContent = loanTerm + " лет";
+}
 
 // Отображение блока с полем первоначального взноса
 function toggleDownPayment(elementId, containerId) {
@@ -61,14 +61,18 @@ function calculatePayment() {
   const calculationData = {
     loanAmount: adjustedLoanAmount,
     loanTerm: loanTerm,
+    loanPurpose: loanPurpose,
     interestRate: interestRate,
+    downPayment: downPayment,
   };
 
   // Отправка запроса на сервер для расчета ежемесячного платежа
-  fetch("http://localhost:3000/calculatePayment", {
+  DOMAIN = "http://localhost:8000"; // спросить Егора
+
+  fetch(DOMAIN + "/api/submit", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/json", // Спросить контент тайп
     },
     body: JSON.stringify(calculationData),
   })
@@ -85,6 +89,26 @@ function calculatePayment() {
       showErrorPopup("Ошибка при расчете ежемесячного платежа.");
       console.error("Error calculating monthly payment:", error);
     });
+  // fetch("http://localhost:3000/calculatePayment", {
+  //   method: "POST",
+  //   headers: {
+  //     "Content-Type": "application/json",
+  //   },
+  //   body: JSON.stringify(calculationData),
+  // })
+  //   .then((response) => response.json())
+  //   .then((data) => {
+  //     const monthlyPayment = data.monthlyPayment;
+
+  //     // Обновляем отображение результата
+  //     document.getElementById(
+  //       "monthlyPayment"
+  //     ).innerText = `${monthlyPayment.toFixed(2)} ₽`;
+  //   })
+  //   .catch((error) => {
+  //     showErrorPopup("Ошибка при расчете ежемесячного платежа.");
+  //     console.error("Error calculating monthly payment:", error);
+  //   });
 }
 
 // Функция для переключения между формой калькулятора и формой заявки с анимацией
