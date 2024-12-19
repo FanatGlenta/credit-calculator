@@ -3,19 +3,6 @@ function updateLoanAmount() {
   const loanAmount = document.getElementById("loanAmount").value;
   document.getElementById("loanAmountValue").innerText = `${loanAmount} ₽`;
 }
-
-// Обновляем текстовое поле при изменении ползунка
-function updateLoanAmount() {
-  const loanAmount = document.getElementById("loanAmount").value;
-  document.getElementById("loanAmountInput").value = loanAmount;
-}
-
-// Обновляем ползунок при изменении текстового поля
-function updateLoanAmountFromInput() {
-  const loanAmountInput = document.getElementById("loanAmountInput").value;
-  document.getElementById("loanAmount").value = loanAmountInput;
-}
-
 function updateLoanTerm() {
   const loanTerm = document.getElementById("loanTerm").value;
   document.getElementById("loanTermValue").textContent = loanTerm + " лет";
@@ -23,9 +10,8 @@ function updateLoanTerm() {
 
 // Отображение блока с полем первоначального взноса
 function toggleDownPayment(elementId, containerId) {
-  const loanPurpose = document.getElementById(elementId).value;
   const downPaymentContainer = document.getElementById(containerId);
-
+  const loanPurpose = document.getElementById(elementId).value;
   if (loanPurpose === "mortgage") {
     downPaymentContainer.style.display = "block"; // Показываем поле
   } else {
@@ -37,6 +23,8 @@ function toggleDownPayment(elementId, containerId) {
 function calculatePayment() {
   const loanAmount = parseFloat(document.getElementById("loanAmount").value);
   const loanTerm = parseFloat(document.getElementById("loanTerm").value);
+
+  const loanPurpose = document.getElementById("loanPurpose").value;
   const interestRate = parseFloat(
     document.getElementById("interestRate").value
   );
@@ -52,63 +40,51 @@ function calculatePayment() {
     return; // Остановить выполнение функции, если условие выполнено
   }
 
-  // Учтём первоначальный взнос, если выбран ипотечный кредит
-  const loanPurpose = document.getElementById("loanPurpose").value;
-  const adjustedLoanAmount =
-    loanPurpose === "mortgage" ? loanAmount - downPayment : loanAmount;
-
   // Подготовка данных для отправки на сервер
   const calculationData = {
-    loanAmount: adjustedLoanAmount,
+    loanAmount: loanAmount,
     loanTerm: loanTerm,
     loanPurpose: loanPurpose,
     interestRate: interestRate,
     downPayment: downPayment,
   };
 
-  // Отправка запроса на сервер для расчета ежемесячного платежа
-  DOMAIN = "http://localhost:8000"; // спросить Егора
+  let formBody = [];
+  for (const property in calculationData) {
+    const encodedKey = encodeURIComponent(property);
+    const encodedValue = encodeURIComponent(calculationData[property]);
+    formBody.push(encodedKey + "=" + encodedValue);
+  }
+  formBody = formBody.join("&");
 
-  fetch(DOMAIN + "/api/submit", {
+  // Отправка запроса на сервер для расчета ежемесячного платежа
+  DOMAIN = "http://localhost:8080"; // спросить Егора
+
+  fetch(DOMAIN + "/api/calculator", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json", // Спросить контент тайп
+      "Content-Type": "application/x-www-form-urlencoded", // Спросить контент тайп
     },
-    body: JSON.stringify(calculationData),
+    body: formBody,
   })
-    .then((response) => response.json())
+    .then((response) => {
+      return response.json();
+    })
     .then((data) => {
-      const monthlyPayment = data.monthlyPayment;
-
-      // Обновляем отображение результата
+      console.log(data); // Выводим ответ сервера в консоль
+      const monthly_payment = data.monthly_payment;
+      if (monthly_payment === undefined) {
+        throw new Error("Ответ сервера не содержит поля monthlyPayment.");
+      }
       document.getElementById(
         "monthlyPayment"
-      ).innerText = `${monthlyPayment.toFixed(2)} ₽`;
+      ).innerText = `${monthly_payment.toFixed(2)} ₽`;
     })
+
     .catch((error) => {
       showErrorPopup("Ошибка при расчете ежемесячного платежа.");
       console.error("Error calculating monthly payment:", error);
     });
-  // fetch("http://localhost:3000/calculatePayment", {
-  //   method: "POST",
-  //   headers: {
-  //     "Content-Type": "application/json",
-  //   },
-  //   body: JSON.stringify(calculationData),
-  // })
-  //   .then((response) => response.json())
-  //   .then((data) => {
-  //     const monthlyPayment = data.monthlyPayment;
-
-  //     // Обновляем отображение результата
-  //     document.getElementById(
-  //       "monthlyPayment"
-  //     ).innerText = `${monthlyPayment.toFixed(2)} ₽`;
-  //   })
-  //   .catch((error) => {
-  //     showErrorPopup("Ошибка при расчете ежемесячного платежа.");
-  //     console.error("Error calculating monthly payment:", error);
-  //   });
 }
 
 // Функция для переключения между формой калькулятора и формой заявки с анимацией
@@ -345,24 +321,36 @@ function submitApplication() {
     interestRate: interestRate.value,
     salary: salary.value,
     loanPurpose: loanPurpose.value,
-    downPayment: downPayment.value,
+    downPayment: downPayment.value || 0,
     submittedAt: new Date().toISOString(),
   };
+
+  let formBody = [];
+  for (const property in applicationData) {
+    const encodedKey = encodeURIComponent(property);
+    const encodedValue = encodeURIComponent(applicationData[property]);
+    formBody.push(encodedKey + "=" + encodedValue);
+  }
+  formBody = formBody.join("&");
 
   // Показываем сообщение пользователю, что заявка обрабатывается
   showSuccessPopup("Заявка обрабатывается. Пожалуйста, подождите...", true);
 
+  DOMAIN = "http://localhost:8080"; // спросить Егора
+
   // Отправка данных на сервер
-  fetch("http://localhost:3000/submitApplication", {
+  fetch(DOMAIN + "/api/submit", {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+      "Content-Type": "application/x-www-form-urlencoded",
     },
-    body: JSON.stringify(applicationData),
+    body: formBody,
   })
     .then((response) => response.json())
     .then((data) => {
-      if (data.status === "success") {
+      console.log("status is: ", data.status);
+      console.log("Полученные данные с сервера:", data); // Логируем данные с сервера
+      if (data.status === "Rejected" || data.status === "Approved") {
         showInfoPopup(data.message);
       } else if (data.status === "error") {
         showInfoPopup(data.message);
@@ -390,8 +378,8 @@ function updateApplicationLoanTerm() {
 // Процентные ставки для разных назначений кредита
 const interestRates = {
   mortgage: [4, 5, 6],
-  auto: [6, 8, 10],
-  consumer: [10, 12, 14],
+  car_loan: [6, 8, 10],
+  consumer_loan: [10, 12, 14],
 };
 
 // Обновление процентных ставок в зависимости от назначения кредита
@@ -417,12 +405,6 @@ function updateInterestRateOptions(formType) {
     interestRateSelect.appendChild(option);
   });
 }
-
-// Функция обновления при загрузке
-window.onload = function () {
-  updateInterestRateOptions("credit");
-  updateInterestRateOptions("application");
-};
 
 //fesdfsdfdsf
 // Прогресс-бар для формы заявки
@@ -474,7 +456,6 @@ function loadPopups() {
 }
 
 // Общая функция для инициализации всех компонентов при загрузке страницы
-// Общая функция для инициализации всех компонентов при загрузке страницы
 function initializePage() {
   // Загрузка попапов
   loadPopups();
@@ -501,3 +482,24 @@ function initializePage() {
 
 // Установка общей функции инициализации для события загрузки страницы
 window.onload = initializePage;
+
+// fetch("http://localhost:3000/calculatePayment", {
+//   method: "POST",
+//   headers: {
+//     "Content-Type": "application/json",
+//   },
+//   body: JSON.stringify(calculationData),
+// })
+//   .then((response) => response.json())
+//   .then((data) => {
+//     const monthlyPayment = data.monthlyPayment;
+
+//     // Обновляем отображение результата
+//     document.getElementById(
+//       "monthlyPayment"
+//     ).innerText = `${monthlyPayment.toFixed(2)} ₽`;
+//   })
+//   .catch((error) => {
+//     showErrorPopup("Ошибка при расчете ежемесячного платежа.");
+//     console.error("Error calculating monthly payment:", error);
+//   });
