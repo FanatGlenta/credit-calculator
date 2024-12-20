@@ -351,13 +351,13 @@ function submitApplication() {
       console.log("status is: ", data.status);
       console.log("Полученные данные с сервера:", data); // Логируем данные с сервера
       if (data.status === "Rejected" || data.status === "Approved") {
-        showInfoPopup(data.message);
+        showInfoPopup(data.reason);
       } else if (data.status === "error") {
-        showInfoPopup(data.message);
+        showInfoPopup(data.reason);
       }
     })
     .catch((error) => {
-      showErrorPopup(error.message);
+      showErrorPopup(error.reason);
     });
 
   // Очистка формы заявки после отправки

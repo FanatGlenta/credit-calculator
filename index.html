@@ -33,16 +33,6 @@
           />
           <div class="range-value" id="loanAmountValue">50 000 ₽</div>
 
-          <!-- Поле для ввода суммы кредита вручную
-          <input
-            type="number"
-            id="loanAmountInput"
-            min="10000"
-            max="1000000"
-            value="50000"
-            oninput="updateLoanAmountFromInput()"
-          /> -->
-
           <label for="loanTerm">Срок кредита (в годах)</label>
           <input
             type="range"
@@ -132,7 +122,7 @@
 
           <label for="maritalStatus">Семейное положение</label>
           <select id="maritalStatus" required>
-            <option value="single">Холост/Не замужем</option>
+            <option value="single" selected>Холост/Не замужем</option>
             <option value="married">Женат/Замужем</option>
             <option value="divorced">Разведен/Разведена</option>
             <option value="widowed">Вдова/Вдовец</option>
@@ -143,7 +133,7 @@
 
           <label for="employmentType">Тип занятости</label>
           <select id="employmentType" required>
-            <option value="permanent">Постоянная</option>
+            <option value="permanent" selected>Постоянная</option>
             <option value="contract">Контрактная</option>
             <option value="self-employed">Самозанятый</option>
             <option value="unemployed">Безработный</option>
