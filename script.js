@@ -58,7 +58,7 @@ function calculatePayment() {
   formBody = formBody.join("&");
 
   // Отправка запроса на сервер для расчета ежемесячного платежа
-  DOMAIN = "http://localhost:8080"; // спросить Егора
+  DOMAIN = "http://localhost:8080";
 
   fetch(DOMAIN + "/api/calculator", {
     method: "POST",
@@ -85,6 +85,8 @@ function calculatePayment() {
       showErrorPopup("Ошибка при расчете ежемесячного платежа.");
       console.error("Error calculating monthly payment:", error);
     });
+
+  console.log(calculationData);
 }
 
 // Функция для переключения между формой калькулятора и формой заявки с анимацией
@@ -321,7 +323,7 @@ function submitApplication() {
     interestRate: interestRate.value,
     salary: salary.value,
     loanPurpose: loanPurpose.value,
-    downPayment: downPayment.value || 0,
+    downPayment: downPayment.value,
     submittedAt: new Date().toISOString(),
   };
 
@@ -336,7 +338,7 @@ function submitApplication() {
   // Показываем сообщение пользователю, что заявка обрабатывается
   showSuccessPopup("Заявка обрабатывается. Пожалуйста, подождите...", true);
 
-  DOMAIN = "http://localhost:8080"; // спросить Егора
+  DOMAIN = "http://localhost:8080";
 
   // Отправка данных на сервер
   fetch(DOMAIN + "/api/submit", {
@@ -359,7 +361,6 @@ function submitApplication() {
     .catch((error) => {
       showErrorPopup(error.reason);
     });
-
   // Очистка формы заявки после отправки
   document.getElementById("application-form").reset();
 }
